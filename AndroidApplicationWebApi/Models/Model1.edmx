@@ -1,0 +1,398 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="AndroidCaseCompetitionModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Competition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateTimeStart" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="DateTimeEnd" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="UploadFileName" Type="text" Nullable="false" />
+          <Property Name="SubjectId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CompetitorSubmission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CompetitionId" Type="int" Nullable="false" />
+          <Property Name="CompetitorId" Type="int" Nullable="false" />
+          <Property Name="SubmitDateTime" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="UploadFileName" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Subject">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="UserTypeId" Type="int" Nullable="false" />
+          <Property Name="SubjectId" Type="int" />
+        </EntityType>
+        <EntityType Name="UserType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Competition_Subject">
+          <End Role="Subject" Type="Self.Subject" Multiplicity="1" />
+          <End Role="Competition" Type="Self.Competition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subject">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Competition">
+              <PropertyRef Name="SubjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompetitionDetail_Competition">
+          <End Role="Competition" Type="Self.Competition" Multiplicity="1" />
+          <End Role="CompetitorSubmission" Type="Self.CompetitorSubmission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Competition">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetitorSubmission">
+              <PropertyRef Name="CompetitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompetitionDetail_User">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="CompetitorSubmission" Type="Self.CompetitorSubmission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetitorSubmission">
+              <PropertyRef Name="CompetitorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Subject">
+          <End Role="Subject" Type="Self.Subject" Multiplicity="0..1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subject">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="SubjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_UserType">
+          <End Role="UserType" Type="Self.UserType" Multiplicity="1" />
+          <End Role="User" Type="Self.User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="UserTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="AndroidCaseCompetitionModelStoreContainer">
+          <EntitySet Name="Competition" EntityType="Self.Competition" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CompetitorSubmission" EntityType="Self.CompetitorSubmission" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Subject" EntityType="Self.Subject" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserType" EntityType="Self.UserType" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Competition_Subject" Association="Self.FK_Competition_Subject">
+            <End Role="Subject" EntitySet="Subject" />
+            <End Role="Competition" EntitySet="Competition" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompetitionDetail_Competition" Association="Self.FK_CompetitionDetail_Competition">
+            <End Role="Competition" EntitySet="Competition" />
+            <End Role="CompetitorSubmission" EntitySet="CompetitorSubmission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompetitionDetail_User" Association="Self.FK_CompetitionDetail_User">
+            <End Role="User" EntitySet="User" />
+            <End Role="CompetitorSubmission" EntitySet="CompetitorSubmission" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Subject" Association="Self.FK_User_Subject">
+            <End Role="Subject" EntitySet="Subject" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_UserType" Association="Self.FK_User_UserType">
+            <End Role="UserType" EntitySet="UserType" />
+            <End Role="User" EntitySet="User" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="AndroidCaseCompetitionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="AndroidCaseCompetitionEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Competitions" EntityType="AndroidCaseCompetitionModel.Competition" />
+          <EntitySet Name="CompetitorSubmissions" EntityType="AndroidCaseCompetitionModel.CompetitorSubmission" />
+          <EntitySet Name="Subjects" EntityType="AndroidCaseCompetitionModel.Subject" />
+          <EntitySet Name="sysdiagrams" EntityType="AndroidCaseCompetitionModel.sysdiagram" />
+          <EntitySet Name="Users" EntityType="AndroidCaseCompetitionModel.User" />
+          <EntitySet Name="UserTypes" EntityType="AndroidCaseCompetitionModel.UserType" />
+          <AssociationSet Name="FK_Competition_Subject" Association="AndroidCaseCompetitionModel.FK_Competition_Subject">
+            <End Role="Subject" EntitySet="Subjects" />
+            <End Role="Competition" EntitySet="Competitions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompetitionDetail_Competition" Association="AndroidCaseCompetitionModel.FK_CompetitionDetail_Competition">
+            <End Role="Competition" EntitySet="Competitions" />
+            <End Role="CompetitorSubmission" EntitySet="CompetitorSubmissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_CompetitionDetail_User" Association="AndroidCaseCompetitionModel.FK_CompetitionDetail_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="CompetitorSubmission" EntitySet="CompetitorSubmissions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_Subject" Association="AndroidCaseCompetitionModel.FK_User_Subject">
+            <End Role="Subject" EntitySet="Subjects" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK_User_UserType" Association="AndroidCaseCompetitionModel.FK_User_UserType">
+            <End Role="UserType" EntitySet="UserTypes" />
+            <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Competition">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DateTimeStart" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="DateTimeEnd" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="UploadFileName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="SubjectId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Subject" Relationship="AndroidCaseCompetitionModel.FK_Competition_Subject" FromRole="Competition" ToRole="Subject" />
+          <NavigationProperty Name="CompetitorSubmissions" Relationship="AndroidCaseCompetitionModel.FK_CompetitionDetail_Competition" FromRole="Competition" ToRole="CompetitorSubmission" />
+        </EntityType>
+        <EntityType Name="CompetitorSubmission">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CompetitionId" Type="Int32" Nullable="false" />
+          <Property Name="CompetitorId" Type="Int32" Nullable="false" />
+          <Property Name="SubmitDateTime" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="UploadFileName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Competition" Relationship="AndroidCaseCompetitionModel.FK_CompetitionDetail_Competition" FromRole="CompetitorSubmission" ToRole="Competition" />
+          <NavigationProperty Name="User" Relationship="AndroidCaseCompetitionModel.FK_CompetitionDetail_User" FromRole="CompetitorSubmission" ToRole="User" />
+        </EntityType>
+        <EntityType Name="Subject">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Competitions" Relationship="AndroidCaseCompetitionModel.FK_Competition_Subject" FromRole="Subject" ToRole="Competition" />
+          <NavigationProperty Name="Users" Relationship="AndroidCaseCompetitionModel.FK_User_Subject" FromRole="Subject" ToRole="User" />
+        </EntityType>
+        <EntityType Name="sysdiagram">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserTypeId" Type="Int32" Nullable="false" />
+          <Property Name="SubjectId" Type="Int32" />
+          <NavigationProperty Name="CompetitorSubmissions" Relationship="AndroidCaseCompetitionModel.FK_CompetitionDetail_User" FromRole="User" ToRole="CompetitorSubmission" />
+          <NavigationProperty Name="Subject" Relationship="AndroidCaseCompetitionModel.FK_User_Subject" FromRole="User" ToRole="Subject" />
+          <NavigationProperty Name="UserType" Relationship="AndroidCaseCompetitionModel.FK_User_UserType" FromRole="User" ToRole="UserType" />
+        </EntityType>
+        <EntityType Name="UserType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Users" Relationship="AndroidCaseCompetitionModel.FK_User_UserType" FromRole="UserType" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_Competition_Subject">
+          <End Type="AndroidCaseCompetitionModel.Subject" Role="Subject" Multiplicity="1" />
+          <End Type="AndroidCaseCompetitionModel.Competition" Role="Competition" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subject">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Competition">
+              <PropertyRef Name="SubjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompetitionDetail_Competition">
+          <End Type="AndroidCaseCompetitionModel.Competition" Role="Competition" Multiplicity="1" />
+          <End Type="AndroidCaseCompetitionModel.CompetitorSubmission" Role="CompetitorSubmission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Competition">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetitorSubmission">
+              <PropertyRef Name="CompetitionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_CompetitionDetail_User">
+          <End Type="AndroidCaseCompetitionModel.User" Role="User" Multiplicity="1" />
+          <End Type="AndroidCaseCompetitionModel.CompetitorSubmission" Role="CompetitorSubmission" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="CompetitorSubmission">
+              <PropertyRef Name="CompetitorId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_Subject">
+          <End Type="AndroidCaseCompetitionModel.Subject" Role="Subject" Multiplicity="0..1" />
+          <End Type="AndroidCaseCompetitionModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Subject">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="SubjectId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_User_UserType">
+          <End Type="AndroidCaseCompetitionModel.UserType" Role="UserType" Multiplicity="1" />
+          <End Type="AndroidCaseCompetitionModel.User" Role="User" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="User">
+              <PropertyRef Name="UserTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="AndroidCaseCompetitionModelStoreContainer" CdmEntityContainer="AndroidCaseCompetitionEntities">
+          <EntitySetMapping Name="Competitions">
+            <EntityTypeMapping TypeName="AndroidCaseCompetitionModel.Competition">
+              <MappingFragment StoreEntitySet="Competition">
+                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
+                <ScalarProperty Name="UploadFileName" ColumnName="UploadFileName" />
+                <ScalarProperty Name="DateTimeEnd" ColumnName="DateTimeEnd" />
+                <ScalarProperty Name="DateTimeStart" ColumnName="DateTimeStart" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CompetitorSubmissions">
+            <EntityTypeMapping TypeName="AndroidCaseCompetitionModel.CompetitorSubmission">
+              <MappingFragment StoreEntitySet="CompetitorSubmission">
+                <ScalarProperty Name="UploadFileName" ColumnName="UploadFileName" />
+                <ScalarProperty Name="SubmitDateTime" ColumnName="SubmitDateTime" />
+                <ScalarProperty Name="CompetitorId" ColumnName="CompetitorId" />
+                <ScalarProperty Name="CompetitionId" ColumnName="CompetitionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Subjects">
+            <EntityTypeMapping TypeName="AndroidCaseCompetitionModel.Subject">
+              <MappingFragment StoreEntitySet="Subject">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="AndroidCaseCompetitionModel.sysdiagram">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="AndroidCaseCompetitionModel.User">
+              <MappingFragment StoreEntitySet="User">
+                <ScalarProperty Name="SubjectId" ColumnName="SubjectId" />
+                <ScalarProperty Name="UserTypeId" ColumnName="UserTypeId" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTypes">
+            <EntityTypeMapping TypeName="AndroidCaseCompetitionModel.UserType">
+              <MappingFragment StoreEntitySet="UserType">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
